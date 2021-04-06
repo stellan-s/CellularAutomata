@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CA</title>
+</head>
+
+<body>
+  <canvas id="canvas">
+  </canvas>
+  <span id="count" style="position: absolute; left: 460px">1</span>
+</body>
+
+<script>
+  // RULES
+  const canvas = document.getElementById('canvas')
+  const count = document.getElementById('count')
+
+
+  // const N = 8
+
+  let N = 44
+
+  // setInterval(() => {
+  N++
+
+  const binN = (N >>> 0).toString(2)
+
+
+  const ruleset = binN.split('')
+
+  for (let index = 0; (8 - ruleset.length) > 0; index++) {
+    ruleset.unshift('0')
+  }
+
+
+
+
+  const gen0 = ['0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '1', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0']
+
+  function generationList(gen) {
+    return gen.map((value, index, array) => array.slice(index, index + 3)).filter(val => val.length === 3)
+  }
+
+
+  const gen0List = generationList(gen0)
+
+
+
+
+  generationCollection = [gen0]
+
+
+
+  for (let index = 0; index < 700; index++) {
+
+    let list = generationList(generationCollection[index])
+
+    let tjo = list.map((genItem) => generationCompute(genItem))
+
+
+    generationCollection.push([generationCollection[index][0], ...tjo, generationCollection[index][generationCollection[index].length - 1]]);
+
+  }
+
+
+
+  function generationCompute(gen) {
+    if (gen.join('') === '000') { return ruleset[7] }
+    if (gen.join('') === '001') { return ruleset[6] }
+    if (gen.join('') === '010') { return ruleset[5] }
+    if (gen.join('') === '011') { return ruleset[4] }
+    if (gen.join('') === '100') { return ruleset[3] }
+    if (gen.join('') === '101') { return ruleset[2] }
+    if (gen.join('') === '110') { return ruleset[1] }
+    if (gen.join('') === '111') { return ruleset[0] }
+
+    // if (gen.join('') === '000') { return ruleset[0] }
+    // if (gen.join('') === '001') { return ruleset[1] }
+    // if (gen.join('') === '010') { return ruleset[2] }
+    // if (gen.join('') === '011') { return ruleset[3] }
+    // if (gen.join('') === '100') { return ruleset[4] }
+    // if (gen.join('') === '101') { return ruleset[5] }
+    // if (gen.join('') === '110') { return ruleset[6] }
+    // if (gen.join('') === '111') { return ruleset[7] }
+  }
+
+
+
+  const width = 800
+  const height = 2800
+
+  let ctx = canvas.getContext("2d")
+
+
+  canvas.setAttribute('width', width)
+  canvas.setAttribute('height', height)
+
+  const rectWH = 7
+
+  generationCollection.forEach((element, i) => {
+
+    element.forEach((rect, j) => {
+
+      ctx.beginPath();
+      ctx.rect(j * rectWH, i * rectWH, rectWH, rectWH);
+      // ctx.fillStyle = `rgb(${Math.random() * 255},${Math.random() * 255},${Math.random() * 255})`
+      ctx.fillStyle = 'navy'
+      ctx.lineWidth = 0.3
+      ctx.strokeStyle = ctx.fillStyle
+      rect === "1" ? ctx.fill() : ctx.stroke();
+
+    });
+
+  });
+
+  count.innerText = N
+
+  // }, 300);
+
+</script>
+
+</html>
